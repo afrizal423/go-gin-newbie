@@ -20,3 +20,13 @@ func (b *bukuService) CreateBuku(data models.Buku) bool {
 func (b *bukuService) ShowAllBuku() []models.Buku {
 	return b.repository.ShowAllBukus()
 }
+
+func (b *bukuService) GetBuku(id int) (models.Buku, bool) {
+	data, status := b.repository.GetBukus(id)
+	if status {
+		// jika datanya ada
+		return data, true
+	} else {
+		return data, false
+	}
+}

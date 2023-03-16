@@ -19,6 +19,7 @@ func main() {
 		bukuRepository.NewBukuRepository(data)))
 
 	router.GET("/books", userHandler.ShowAllBuku)
+	router.GET("/books/:bookId", userHandler.GetBukuById)
 	router.POST("/books", userHandler.TambahBuku)
 
 	router.Run(":8000")
