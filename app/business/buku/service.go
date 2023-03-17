@@ -30,3 +30,8 @@ func (b *bukuService) GetBuku(id int) (models.Buku, bool) {
 		return data, false
 	}
 }
+
+func (b *bukuService) UpdateBuku(id int, data models.Buku) bool {
+	_, status := b.repository.UpdateBukus(id, data)
+	return status
+}

@@ -55,3 +55,30 @@ func (c *Controller) GetBukuById(ctx *gin.Context) {
 	}
 
 }
+
+func (c *Controller) UpdateBuku(ctx *gin.Context) {
+	var buku models.Buku
+	bId := ctx.Param("bookId")
+	bukuId, err := strconv.Atoi(bId)
+	if err != nil {
+		fmt.Println("Error during conversion")
+		return
+	}
+	if err := ctx.ShouldBindJSON(&buku); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+	fmt.Println(buku, bukuId)
+	// c.service.CreateBuku(buku)
+	status := c.service.UpdateBuku(bukuId, buku)
+	if status {
+		ctx.JSON(http.StatusCreated, "Updated")
+		return
+	} else {
+		restErr := errors.NewBadRequestError("invalid update data")
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+
+}

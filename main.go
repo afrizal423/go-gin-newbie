@@ -20,6 +20,7 @@ func main() {
 
 	router.GET("/books", userHandler.ShowAllBuku)
 	router.GET("/books/:bookId", userHandler.GetBukuById)
+	router.PUT("/books/:bookId", userHandler.UpdateBuku)
 	router.POST("/books", userHandler.TambahBuku)
 
 	router.Run(":8000")

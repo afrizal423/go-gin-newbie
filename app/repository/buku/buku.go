@@ -35,3 +35,17 @@ func (bk *BukuRepository) GetBukus(id int) (models.Buku, bool) {
 	}
 	return data, false
 }
+
+func (bk *BukuRepository) UpdateBukus(id int, data models.Buku) (models.Buku, bool) {
+	var datas models.Buku
+	for i, m := range bk.Data_buku {
+		if m.Id == id {
+			bk.Data_buku[i].Id = m.Id
+			bk.Data_buku[i].Author = data.Author
+			bk.Data_buku[i].Title = data.Title
+			bk.Data_buku[i].Desc = data.Desc
+			return bk.Data_buku[i], true
+		}
+	}
+	return datas, false
+}
