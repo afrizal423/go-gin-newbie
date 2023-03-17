@@ -7,6 +7,7 @@ type IBukuService interface {
 	ShowAllBuku() []models.Buku
 	GetBuku(id int) (models.Buku, bool)
 	UpdateBuku(id int, data models.Buku) bool
+	DeleteBuku(id int) bool
 }
 
 type IBukuRepository interface {
@@ -14,4 +15,5 @@ type IBukuRepository interface {
 	ShowAllBukus() []models.Buku
 	GetBukus(id int) (models.Buku, bool)
 	UpdateBukus(id int, data models.Buku) (models.Buku, bool)
+	DeleteBukus(id int) bool
 }

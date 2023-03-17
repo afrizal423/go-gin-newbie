@@ -3,7 +3,7 @@
 </p>
 
 # Go Gin Newbie
-Projek homework challange sesi 2 Digitalent Scholarship partner by Hacktiv8. Projek ini menggunakan arsitektur [_hexagonal_](https://blog.octo.com/en/hexagonal-architecture-three-principles-and-an-implementation-example/) dengan framework [_Gin_](https://gin-gonic.com/), untuk sesi ini **tidak menggunakan database** melainkan hanya array struct.
+Projek homework challange sesi 2 Digitalent Scholarship partner by Hacktiv8. Projek ini menggunakan framework [_Gin_](https://gin-gonic.com/), untuk sesi ini **tidak menggunakan database** melainkan hanya array struct.
 
 # How To Install
 - Download Go terlebih dahulu [disini](https://golang.org/dl/)

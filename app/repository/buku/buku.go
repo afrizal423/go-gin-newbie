@@ -49,3 +49,14 @@ func (bk *BukuRepository) UpdateBukus(id int, data models.Buku) (models.Buku, bo
 	}
 	return datas, false
 }
+
+func (bk *BukuRepository) DeleteBukus(id int) bool {
+	for i, m := range bk.Data_buku {
+		if m.Id == id {
+			// Menghapus data buku dengan id n dari array
+			bk.Data_buku = append(bk.Data_buku[:i], bk.Data_buku[i+1:]...)
+			return true
+		}
+	}
+	return false
+}

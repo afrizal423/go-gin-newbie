@@ -70,13 +70,30 @@ func (c *Controller) UpdateBuku(ctx *gin.Context) {
 		return
 	}
 	fmt.Println(buku, bukuId)
-	// c.service.CreateBuku(buku)
 	status := c.service.UpdateBuku(bukuId, buku)
 	if status {
 		ctx.JSON(http.StatusCreated, "Updated")
 		return
 	} else {
 		restErr := errors.NewBadRequestError("invalid update data")
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+}
+
+func (c *Controller) HapusBuku(ctx *gin.Context) {
+	bId := ctx.Param("bookId")
+	bukuId, err := strconv.Atoi(bId)
+	if err != nil {
+		fmt.Println("Error during conversion")
+		return
+	}
+	status := c.service.DeleteBuku(bukuId)
+	if status {
+		ctx.JSON(http.StatusCreated, "Deleted")
+		return
+	} else {
+		restErr := errors.NewBadRequestError("invalid delete data")
 		ctx.JSON(restErr.ErrStatus, restErr)
 		return
 	}

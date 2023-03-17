@@ -15,13 +15,14 @@ var (
 func main() {
 	data := configs.InitData()
 
-	userHandler := bukuController.NewBukuController(bukuService.NewBukuService(
+	bukuHandler := bukuController.NewBukuController(bukuService.NewBukuService(
 		bukuRepository.NewBukuRepository(data)))
 
-	router.GET("/books", userHandler.ShowAllBuku)
-	router.GET("/books/:bookId", userHandler.GetBukuById)
-	router.PUT("/books/:bookId", userHandler.UpdateBuku)
-	router.POST("/books", userHandler.TambahBuku)
+	router.GET("/books", bukuHandler.ShowAllBuku)
+	router.GET("/books/:bookId", bukuHandler.GetBukuById)
+	router.PUT("/books/:bookId", bukuHandler.UpdateBuku)
+	router.POST("/books", bukuHandler.TambahBuku)
+	router.DELETE("/books/:bookId", bukuHandler.HapusBuku)
 
 	router.Run(":8000")
 }

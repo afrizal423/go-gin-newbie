@@ -35,3 +35,7 @@ func (b *bukuService) UpdateBuku(id int, data models.Buku) bool {
 	_, status := b.repository.UpdateBukus(id, data)
 	return status
 }
+
+func (b *bukuService) DeleteBuku(id int) bool {
+	return b.repository.DeleteBukus(id)
+}
