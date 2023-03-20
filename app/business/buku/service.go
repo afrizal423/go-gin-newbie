@@ -6,7 +6,7 @@ type bukuService struct {
 	repository IBukuRepository
 }
 
-func NewBukuService(repository IBukuRepository) IBukuService {
+func NewBukuService(repository IBukuRepository) *bukuService {
 	return &bukuService{
 		repository,
 	}
