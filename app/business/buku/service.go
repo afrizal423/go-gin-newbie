@@ -41,11 +41,18 @@ func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
 	return bukuById, nil
 }
 
-// func (b *bukuService) UpdateBuku(id int, data models.Buku) bool {
-// 	_, status := b.repository.UpdateBukus(id, data)
-// 	return status
-// }
+func (b *bukuService) UpdateBuku(id int, data models.Buku) error {
+	db := configs.PostgresConn()
+	if err := b.repository.UpdateBukus(id, data, db); err != nil {
+		return err
+	}
+	return nil
+}
 
-// func (b *bukuService) DeleteBuku(id int) bool {
-// 	return b.repository.DeleteBukus(id)
-// }
+func (b *bukuService) DeleteBuku(id int) error {
+	db := configs.PostgresConn()
+	if err := b.repository.DeleteBukus(id, db); err != nil {
+		return err
+	}
+	return nil
+}

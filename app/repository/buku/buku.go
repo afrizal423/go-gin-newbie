@@ -98,27 +98,53 @@ func (bk *BukuRepository) GetBukus(id int, db *sql.DB) (*models.Buku, error) {
 	return &data, err
 }
 
-// func (bk *BukuRepository) UpdateBukus(id int, data models.Buku) (models.Buku, bool) {
-// 	var datas models.Buku
-// 	for i, m := range bk.Data_buku {
-// 		if m.Id == id {
-// 			bk.Data_buku[i].Id = m.Id
-// 			bk.Data_buku[i].Author = data.Author
-// 			bk.Data_buku[i].Title = data.Title
-// 			bk.Data_buku[i].Desc = data.Desc
-// 			return bk.Data_buku[i], true
-// 		}
-// 	}
-// 	return datas, false
-// }
+func (bk *BukuRepository) UpdateBukus(id int, data models.Buku, db *sql.DB) error {
+	// kita tutup koneksinya di akhir proses
+	defer configs.PostgresClose(db)
 
-// func (bk *BukuRepository) DeleteBukus(id int) bool {
-// 	for i, m := range bk.Data_buku {
-// 		if m.Id == id {
-// 			// Menghapus data buku dengan id n dari array
-// 			bk.Data_buku = append(bk.Data_buku[:i], bk.Data_buku[i+1:]...)
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
+	// kita buat sql query update
+	sqlStatement := `UPDATE "book" SET "title"=$2, "author"=$3, "desc"=$4 WHERE "id"=$1`
+
+	// eksekusi sql statement
+	res, err := db.Exec(sqlStatement, id, data.Title, data.Author, data.Desc)
+
+	if err != nil {
+		return err
+	}
+
+	// cek berapa banyak row/data yang diupdate
+	rowsAffected, err := res.RowsAffected()
+
+	//kita cek
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Total rows/record yang diupdate %v\n", rowsAffected)
+	return err
+}
+
+func (bk *BukuRepository) DeleteBukus(id int, db *sql.DB) error {
+	// kita tutup koneksinya di akhir proses
+	defer configs.PostgresClose(db)
+	// buat sql query
+	sqlStatement := `DELETE FROM book WHERE id=$1`
+
+	// eksekusi sql statement
+	res, err := db.Exec(sqlStatement, id)
+
+	if err != nil {
+		log.Fatalf("tidak bisa mengeksekusi query. %v", err)
+	}
+
+	// cek berapa jumlah data/row yang di hapus
+	rowsAffected, err := res.RowsAffected()
+
+	if err != nil {
+		log.Fatalf("tidak bisa mencari data. %v", err)
+	}
+
+	fmt.Printf("Total data yang terhapus %v", rowsAffected)
+
+	return err
+}
