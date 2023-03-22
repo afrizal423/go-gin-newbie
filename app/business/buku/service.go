@@ -43,6 +43,9 @@ func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
 
 func (b *bukuService) UpdateBuku(id int, data models.Buku) error {
 	db := configs.PostgresConn()
+	if err := b.repository.HitungBukus(id, db); err != nil {
+		return err
+	}
 	if err := b.repository.UpdateBukus(id, data, db); err != nil {
 		return err
 	}
@@ -51,6 +54,9 @@ func (b *bukuService) UpdateBuku(id int, data models.Buku) error {
 
 func (b *bukuService) DeleteBuku(id int) error {
 	db := configs.PostgresConn()
+	if err := b.repository.HitungBukus(id, db); err != nil {
+		return err
+	}
 	if err := b.repository.DeleteBukus(id, db); err != nil {
 		return err
 	}

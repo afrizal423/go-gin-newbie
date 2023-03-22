@@ -54,7 +54,7 @@ func (c *Controller) GetBukuById(ctx *gin.Context) {
 	data, err := c.service.GetBuku(bukuId)
 	if err != nil {
 		// jika datanya error
-		restErr := errors.NewBadRequestError("something went wrong")
+		restErr := errors.NewBadRequestError(fmt.Sprintf("gagal mendapatkan data: %v", err.Error()))
 		ctx.JSON(restErr.ErrStatus, restErr)
 	} else {
 		ctx.JSON(http.StatusOK, data)

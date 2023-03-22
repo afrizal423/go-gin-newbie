@@ -20,4 +20,5 @@ type IBukuRepository interface {
 	GetBukus(id int, db *sql.DB) (*models.Buku, error)
 	UpdateBukus(id int, data models.Buku, db *sql.DB) error
 	DeleteBukus(id int, db *sql.DB) error
+	HitungBukus(id int, db *sql.DB) error
 }

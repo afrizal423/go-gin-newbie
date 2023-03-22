@@ -3,6 +3,7 @@ package buku
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 
@@ -89,7 +90,7 @@ func (bk *BukuRepository) GetBukus(id int, db *sql.DB) (*models.Buku, error) {
 	switch err {
 	case sql.ErrNoRows:
 		fmt.Println("Tidak ada data yang dicari!")
-		return &data, nil
+		return &data, errors.New("tidak ada data yang dicari")
 	case nil:
 		return &data, nil
 	default:
@@ -147,4 +148,30 @@ func (bk *BukuRepository) DeleteBukus(id int, db *sql.DB) error {
 	fmt.Printf("Total data yang terhapus %v", rowsAffected)
 
 	return err
+}
+
+func (bk *BukuRepository) HitungBukus(id int, db *sql.DB) error {
+	// kita tutup koneksinya di akhir proses
+	//defer configs.PostgresClose(db)
+
+	rows, err := db.Query("SELECT COUNT(*) FROM book WHERE id=$1", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var count int
+
+	for rows.Next() {
+		if err := rows.Scan(&count); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	fmt.Printf("Number of rows are %d\n", count)
+
+	if count == 0 {
+		return errors.New("tidak ada data yang dicari")
+	}
+	return nil
 }
