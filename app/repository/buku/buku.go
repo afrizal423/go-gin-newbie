@@ -1,29 +1,33 @@
 package buku
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
 
 	"github.com/afrizal423/go-gin-newbie/app/models"
+	"github.com/afrizal423/go-gin-newbie/configs"
 )
 
 type BukuRepository struct {
-	db *sql.DB
+	Ctx context.Context
 }
 
-func NewBukuRepository(db *sql.DB) *BukuRepository {
+func NewBukuRepository(ctx context.Context) *BukuRepository {
 	return &BukuRepository{
-		db,
+		ctx,
 	}
 }
 
-func (bk *BukuRepository) CreateBukus(data models.Buku) error {
+func (bk *BukuRepository) CreateBukus(data models.Buku, db *sql.DB) error {
+	// kita tutup koneksinya di akhir proses
+	defer configs.PostgresClose(db)
 
 	// kita buat insert query
 	// mengembalikan nilai id akan mengembalikan id dari buku yang dimasukkan ke db
 	sqlStatement := `INSERT INTO "book" ("title", "author", "desc") VALUES ($1, $2, $3)`
-	_, e := bk.db.Exec(sqlStatement, data.Title, data.Author, data.Desc)
+	_, e := db.Exec(sqlStatement, data.Title, data.Author, data.Desc)
 
 	if e != nil {
 		log.Fatalf("Tidak Bisa mengeksekusi query. %v", e)
@@ -32,7 +36,9 @@ func (bk *BukuRepository) CreateBukus(data models.Buku) error {
 	return e
 }
 
-func (bk *BukuRepository) ShowAllBukus() ([]models.Buku, error) {
+func (bk *BukuRepository) ShowAllBukus(db *sql.DB) ([]models.Buku, error) {
+	// kita tutup koneksinya di akhir proses
+	defer configs.PostgresClose(db)
 
 	// variable menampung data
 	var bukus []models.Buku
@@ -41,7 +47,7 @@ func (bk *BukuRepository) ShowAllBukus() ([]models.Buku, error) {
 	sqlStatement := `SELECT * FROM book`
 
 	// mengeksekusi sql query
-	rows, err := bk.db.Query(sqlStatement)
+	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
 		return nil, err
@@ -66,8 +72,9 @@ func (bk *BukuRepository) ShowAllBukus() ([]models.Buku, error) {
 	return bukus, nil
 }
 
-func (bk *BukuRepository) GetBukus(id int) (*models.Buku, error) {
-
+func (bk *BukuRepository) GetBukus(id int, db *sql.DB) (*models.Buku, error) {
+	// kita tutup koneksinya di akhir proses
+	defer configs.PostgresClose(db)
 	// inisialisasi variable buat nyimpan data hasil db
 	var data models.Buku
 
@@ -75,7 +82,7 @@ func (bk *BukuRepository) GetBukus(id int) (*models.Buku, error) {
 	sqlStatement := `SELECT * FROM book WHERE id=$1`
 
 	// eksekusi sql statement
-	row := bk.db.QueryRow(sqlStatement, id)
+	row := db.QueryRow(sqlStatement, id)
 
 	err := row.Scan(&data.Id, &data.Title, &data.Author, &data.Desc)
 

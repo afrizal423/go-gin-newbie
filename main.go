@@ -13,7 +13,7 @@ var (
 )
 
 func main() {
-	conn := configs.PostgresConn()
+	conn := configs.InitContext()
 
 	bukuHandler := bukuController.NewBukuController(bukuService.NewBukuService(
 		bukuRepository.NewBukuRepository(conn)))

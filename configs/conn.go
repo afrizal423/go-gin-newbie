@@ -8,7 +8,7 @@ import (
 	_ "github.com/lib/pq" // postgres golang driver
 )
 
-// mysql database konektor
+// postgres database konektor
 func PostgresConn() *sql.DB {
 	configDB := map[string]string{
 		"DB_Username": Config("DB_USERNAME"),
@@ -40,4 +40,10 @@ func PostgresConn() *sql.DB {
 	log.Println("DATABASE Successfully connected!")
 	// return the connection
 	return db
+}
+
+// postgres database close
+func PostgresClose(db *sql.DB) error {
+	log.Println("DATABASE Successfully disconnected!")
+	return db.Close()
 }

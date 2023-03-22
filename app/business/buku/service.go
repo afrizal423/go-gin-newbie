@@ -1,6 +1,9 @@
 package buku
 
-import "github.com/afrizal423/go-gin-newbie/app/models"
+import (
+	"github.com/afrizal423/go-gin-newbie/app/models"
+	"github.com/afrizal423/go-gin-newbie/configs"
+)
 
 type bukuService struct {
 	repository IBukuRepository
@@ -13,14 +16,16 @@ func NewBukuService(repository IBukuRepository) *bukuService {
 }
 
 func (b *bukuService) CreateBuku(data models.Buku) error {
-	if err := b.repository.CreateBukus(data); err != nil {
+	db := configs.PostgresConn()
+	if err := b.repository.CreateBukus(data, db); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (b *bukuService) ShowAllBuku() ([]models.Buku, error) {
-	data, err := b.repository.ShowAllBukus()
+	db := configs.PostgresConn()
+	data, err := b.repository.ShowAllBukus(db)
 	if err != nil {
 		return []models.Buku{}, nil
 	}
@@ -28,7 +33,8 @@ func (b *bukuService) ShowAllBuku() ([]models.Buku, error) {
 }
 
 func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
-	bukuById, err := b.repository.GetBukus(id)
+	db := configs.PostgresConn()
+	bukuById, err := b.repository.GetBukus(id, db)
 	if err != nil {
 		return nil, err
 	}
