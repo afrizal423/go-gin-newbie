@@ -2,6 +2,7 @@ package buku
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/afrizal423/go-gin-newbie/app/models"
@@ -18,8 +19,6 @@ func NewBukuRepository(db *sql.DB) *BukuRepository {
 }
 
 func (bk *BukuRepository) CreateBukus(data models.Buku) error {
-	// kita tutup koneksinya di akhir proses
-	defer bk.db.Close()
 
 	// kita buat insert query
 	// mengembalikan nilai id akan mengembalikan id dari buku yang dimasukkan ke db
@@ -34,8 +33,7 @@ func (bk *BukuRepository) CreateBukus(data models.Buku) error {
 }
 
 func (bk *BukuRepository) ShowAllBukus() ([]models.Buku, error) {
-	// kita tutup koneksinya di akhir proses
-	defer bk.db.Close()
+
 	// variable menampung data
 	var bukus []models.Buku
 
@@ -68,17 +66,30 @@ func (bk *BukuRepository) ShowAllBukus() ([]models.Buku, error) {
 	return bukus, nil
 }
 
-// func (bk *BukuRepository) GetBukus(id int) (models.Buku, bool) {
-// 	var data models.Buku
-// 	for _, m := range bk.Data_buku {
-// 		if m.Id == id {
-// 			data = m
-// 			return data, true
+func (bk *BukuRepository) GetBukus(id int) (*models.Buku, error) {
 
-// 		}
-// 	}
-// 	return data, false
-// }
+	// inisialisasi variable buat nyimpan data hasil db
+	var data models.Buku
+
+	// buat sql query
+	sqlStatement := `SELECT * FROM book WHERE id=$1`
+
+	// eksekusi sql statement
+	row := bk.db.QueryRow(sqlStatement, id)
+
+	err := row.Scan(&data.Id, &data.Title, &data.Author, &data.Desc)
+
+	switch err {
+	case sql.ErrNoRows:
+		fmt.Println("Tidak ada data yang dicari!")
+		return &data, nil
+	case nil:
+		return &data, nil
+	default:
+		log.Fatalf("tidak bisa mengambil data. %v", err)
+	}
+	return &data, err
+}
 
 // func (bk *BukuRepository) UpdateBukus(id int, data models.Buku) (models.Buku, bool) {
 // 	var datas models.Buku

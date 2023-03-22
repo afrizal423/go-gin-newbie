@@ -27,15 +27,13 @@ func (b *bukuService) ShowAllBuku() ([]models.Buku, error) {
 	return data, nil
 }
 
-// func (b *bukuService) GetBuku(id int) (models.Buku, bool) {
-// 	data, status := b.repository.GetBukus(id)
-// 	if status {
-// 		// jika datanya ada
-// 		return data, true
-// 	} else {
-// 		return data, false
-// 	}
-// }
+func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
+	bukuById, err := b.repository.GetBukus(id)
+	if err != nil {
+		return nil, err
+	}
+	return bukuById, nil
+}
 
 // func (b *bukuService) UpdateBuku(id int, data models.Buku) bool {
 // 	_, status := b.repository.UpdateBukus(id, data)
