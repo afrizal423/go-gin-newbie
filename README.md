@@ -7,7 +7,7 @@ Projek homework challange sesi 3 Digitalent Scholarship partner by Hacktiv8 mate
 
 # How To Install
 - Download Go terlebih dahulu [disini](https://golang.org/dl/)
-- Download repo [ini](https://github.com/afrizal423/go-gin-newbie/archive/master.zip)
+- Download repo [ini](https://github.com/afrizal423/go-gin-newbie/archive/refs/heads/sesi-3-challange.zip)
 - Masuk kedalam foldernya
 - Jalankan perintah ```go mod download``` untuk mendownload semua dependency
 - Jalankan perintah ```go run main.go``` untuk menjalankan program
