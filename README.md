@@ -11,3 +11,6 @@ Projek homework challange sesi 3 Digitalent Scholarship partner by Hacktiv8 mate
 - Masuk kedalam foldernya
 - Jalankan perintah ```go mod download``` untuk mendownload semua dependency
 - Jalankan perintah ```go run main.go``` untuk menjalankan program
+
+# Dokumentasi
+Via [Postman Documenter](https://documenter.getpostman.com/view/8073012/2s93RMTuck)
