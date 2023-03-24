@@ -1,5 +1,10 @@
 package buku
 
+import (
+	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
+	"github.com/afrizal423/go-gin-newbie/app/models"
+)
+
 type bukuService struct {
 	repository IBukuRepository
 }
@@ -10,22 +15,24 @@ func NewBukuService(repository IBukuRepository) *bukuService {
 	}
 }
 
-// func (b *bukuService) CreateBuku(data models.Buku) error {
-// 	db := configs.PostgresConn()
-// 	if err := b.repository.CreateBukus(data, db); err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+// services proses membuat data buku baru
+func (b *bukuService) CreateBuku(data models.Buku) (models.Buku, error) {
+	var dt2 models.Buku
+	data, err := b.repository.CreateBukus(data)
+	if err != nil {
+		return dt2, err
+	}
+	return data, nil
+}
 
-// func (b *bukuService) ShowAllBuku() ([]models.Buku, error) {
-// 	db := configs.PostgresConn()
-// 	data, err := b.repository.ShowAllBukus(db)
-// 	if err != nil {
-// 		return []models.Buku{}, nil
-// 	}
-// 	return data, nil
-// }
+// services proses menampilkan data buku semua
+func (b *bukuService) ShowAllBuku() ([]buku_response.BukuResponse, error) {
+	data, err := b.repository.ShowAllBukus()
+	if err != nil {
+		return []buku_response.BukuResponse{}, nil
+	}
+	return data, nil
+}
 
 // func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
 // 	db := configs.PostgresConn()

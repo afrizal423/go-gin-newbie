@@ -1,6 +1,10 @@
 package buku
 
-import "gorm.io/gorm"
+import (
+	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
+	"github.com/afrizal423/go-gin-newbie/app/models"
+	"gorm.io/gorm"
+)
 
 type BukuRepository struct {
 	db *gorm.DB
@@ -12,57 +16,34 @@ func NewBukuRepository(db *gorm.DB) *BukuRepository {
 	}
 }
 
-// func (bk *BukuRepository) CreateBukus(data models.Buku, db *sql.DB) error {
-// 	// kita tutup koneksinya di akhir proses
-// 	defer configs.PostgresClose(db)
+// repository menambahkan buku baru
+func (bk *BukuRepository) CreateBukus(data models.Buku) (models.Buku, error) {
+	var dt models.Buku
+	if err := bk.db.Create(&data).Error; err != nil {
+		return dt, err
+	}
+	return data, nil
+}
 
-// 	// kita buat insert query
-// 	// mengembalikan nilai id akan mengembalikan id dari buku yang dimasukkan ke db
-// 	sqlStatement := `INSERT INTO "book" ("title", "author", "desc") VALUES ($1, $2, $3)`
-// 	_, e := db.Exec(sqlStatement, data.Title, data.Author, data.Desc)
+// repository menampilkan semua buku
+func (bk *BukuRepository) ShowAllBukus() ([]buku_response.BukuResponse, error) {
+	var data []models.Buku
+	var result []buku_response.BukuResponse
+	if err := bk.db.Find(&data).Error; err != nil {
+		return nil, err
+	}
+	for _, v := range data {
+		var tmp buku_response.BukuResponse
+		tmp.Id = v.Id
+		tmp.Title = v.Title
+		tmp.Author = v.Author
+		tmp.CreatedAt = v.CreatedAt
+		tmp.UpdatedAt = v.UpdatedAt
+		result = append(result, tmp)
+	}
 
-// 	if e != nil {
-// 		log.Fatalf("Tidak Bisa mengeksekusi query. %v", e)
-// 	}
-
-// 	return e
-// }
-
-// func (bk *BukuRepository) ShowAllBukus(db *sql.DB) ([]models.Buku, error) {
-// 	// kita tutup koneksinya di akhir proses
-// 	defer configs.PostgresClose(db)
-
-// 	// variable menampung data
-// 	var bukus []models.Buku
-
-// 	// kita buat select query
-// 	sqlStatement := `SELECT * FROM book`
-
-// 	// mengeksekusi sql query
-// 	rows, err := db.Query(sqlStatement)
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	// kita tutup eksekusi proses sql qeurynya
-// 	defer rows.Close()
-// 	// kita iterasi mengambil datanya
-// 	for rows.Next() {
-// 		// temporary data
-// 		var booktemp models.Buku
-// 		// kita ambil datanya dan unmarshal ke structnya
-// 		err = rows.Scan(&booktemp.Id, &booktemp.Title, &booktemp.Author, &booktemp.Desc)
-
-// 		if err != nil {
-// 			return nil, err
-// 		}
-
-// 		// masukkan kedalam slice bukus
-// 		bukus = append(bukus, booktemp)
-// 	}
-// 	return bukus, nil
-// }
+	return result, nil
+}
 
 // func (bk *BukuRepository) GetBukus(id int, db *sql.DB) (*models.Buku, error) {
 // 	// kita tutup koneksinya di akhir proses

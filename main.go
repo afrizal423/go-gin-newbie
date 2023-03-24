@@ -18,13 +18,13 @@ func main() {
 	// migrate db
 	database.DbMigrate(conn)
 
-	bukuController.NewBukuController(bukuService.NewBukuService(
+	bukuHandler := bukuController.NewBukuController(bukuService.NewBukuService(
 		bukuRepository.NewBukuRepository(conn)))
 
-	// router.GET("/books", bukuHandler.ShowAllBuku)
+	router.GET("/books", bukuHandler.ShowAllBuku)
 	// router.GET("/books/:bookId", bukuHandler.GetBukuById)
 	// router.PUT("/books/:bookId", bukuHandler.UpdateBuku)
-	// router.POST("/books", bukuHandler.TambahBuku)
+	router.POST("/books", bukuHandler.TambahBuku)
 	// router.DELETE("/books/:bookId", bukuHandler.HapusBuku)
 
 	router.Run(":8000")
