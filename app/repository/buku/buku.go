@@ -45,82 +45,34 @@ func (bk *BukuRepository) ShowAllBukus() ([]buku_response.BukuResponse, error) {
 	return result, nil
 }
 
-// func (bk *BukuRepository) GetBukus(id int, db *sql.DB) (*models.Buku, error) {
-// 	// kita tutup koneksinya di akhir proses
-// 	defer configs.PostgresClose(db)
-// 	// inisialisasi variable buat nyimpan data hasil db
-// 	var data models.Buku
+// repository untuk menampilkan detail buku
+func (bk *BukuRepository) GetBukus(id int) (*models.Buku, error) {
+	var data models.Buku
+	if err := bk.db.First(&data, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
 
-// 	// buat sql query
-// 	sqlStatement := `SELECT * FROM book WHERE id=$1`
+// repository untuk mengupdate buku
+func (bk *BukuRepository) UpdateBukus(id int, data models.Buku) (models.Buku, error) {
+	var dt models.Buku
+	if err := bk.db.Where("id = ?", id).Updates(&data).Error; err != nil {
+		return dt, err
+	}
+	if err := bk.db.First(&data, "id = ?", id).Error; err != nil {
+		return dt, err
+	}
+	return data, nil
+}
 
-// 	// eksekusi sql statement
-// 	row := db.QueryRow(sqlStatement, id)
-
-// 	err := row.Scan(&data.Id, &data.Title, &data.Author, &data.Desc)
-
-// 	switch err {
-// 	case sql.ErrNoRows:
-// 		fmt.Println("Tidak ada data yang dicari!")
-// 		return &data, errors.New("tidak ada data yang dicari")
-// 	case nil:
-// 		return &data, nil
-// 	default:
-// 		log.Fatalf("tidak bisa mengambil data. %v", err)
-// 	}
-// 	return &data, err
-// }
-
-// func (bk *BukuRepository) UpdateBukus(id int, data models.Buku, db *sql.DB) error {
-// 	// kita tutup koneksinya di akhir proses
-// 	defer configs.PostgresClose(db)
-
-// 	// kita buat sql query update
-// 	sqlStatement := `UPDATE "book" SET "title"=$2, "author"=$3, "desc"=$4 WHERE "id"=$1`
-
-// 	// eksekusi sql statement
-// 	res, err := db.Exec(sqlStatement, id, data.Title, data.Author, data.Desc)
-
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// cek berapa banyak row/data yang diupdate
-// 	rowsAffected, err := res.RowsAffected()
-
-// 	//kita cek
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	fmt.Printf("Total rows/record yang diupdate %v\n", rowsAffected)
-// 	return err
-// }
-
-// func (bk *BukuRepository) DeleteBukus(id int, db *sql.DB) error {
-// 	// kita tutup koneksinya di akhir proses
-// 	defer configs.PostgresClose(db)
-// 	// buat sql query
-// 	sqlStatement := `DELETE FROM book WHERE id=$1`
-
-// 	// eksekusi sql statement
-// 	res, err := db.Exec(sqlStatement, id)
-
-// 	if err != nil {
-// 		log.Fatalf("tidak bisa mengeksekusi query. %v", err)
-// 	}
-
-// 	// cek berapa jumlah data/row yang di hapus
-// 	rowsAffected, err := res.RowsAffected()
-
-// 	if err != nil {
-// 		log.Fatalf("tidak bisa mencari data. %v", err)
-// 	}
-
-// 	fmt.Printf("Total data yang terhapus %v", rowsAffected)
-
-// 	return err
-// }
+func (bk *BukuRepository) DeleteBukus(id int) error {
+	var data models.Buku
+	if err := bk.db.Where("id = ?", id).Delete(&data).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 // func (bk *BukuRepository) HitungBukus(id int, db *sql.DB) error {
 // 	// kita tutup koneksinya di akhir proses

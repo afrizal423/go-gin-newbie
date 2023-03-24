@@ -10,9 +10,12 @@ type IBukuService interface {
 	CreateBuku(data models.Buku) (models.Buku, error)
 	// services proses menampilkan data buku semua
 	ShowAllBuku() ([]buku_response.BukuResponse, error)
-	// GetBuku(id int) (*models.Buku, error)
-	// UpdateBuku(id int, data models.Buku) error
-	// DeleteBuku(id int) error
+	// services proses menampilkan data detail buku
+	GetBuku(id int) (*models.Buku, error)
+	// services proses mengubah data buku
+	UpdateBuku(id int, data models.Buku) (models.Buku, error)
+	// services proses menghapus data buku
+	DeleteBuku(id int) error
 }
 
 type IBukuRepository interface {
@@ -20,8 +23,11 @@ type IBukuRepository interface {
 	CreateBukus(data models.Buku) (models.Buku, error)
 	// repository menampilkan semua buku
 	ShowAllBukus() ([]buku_response.BukuResponse, error)
-	// GetBukus(id int, db *sql.DB) (*models.Buku, error)
-	// UpdateBukus(id int, data models.Buku, db *sql.DB) error
-	// DeleteBukus(id int, db *sql.DB) error
+	// repository untuk menampilkan detail buku
+	GetBukus(id int) (*models.Buku, error)
+	// repository untuk mengupdate buku
+	UpdateBukus(id int, data models.Buku) (models.Buku, error)
+	// repository untuk menghapus buku
+	DeleteBukus(id int) error
 	// HitungBukus(id int, db *sql.DB) error
 }

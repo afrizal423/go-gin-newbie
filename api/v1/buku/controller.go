@@ -2,7 +2,10 @@ package buku
 
 import (
 	"fmt"
+	"html"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_request"
 	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
@@ -35,7 +38,7 @@ func (c *Controller) TambahBuku(ctx *gin.Context) {
 	}
 
 	// proses ke bagian services
-	data, err := c.service.CreateBuku(*buku.CreateJenisBuku())
+	data, err := c.service.CreateBuku(*buku.CreateUpdateJenisBuku())
 	if err != nil {
 		restErr := errors.NewBadRequestError(fmt.Sprintf("%v", err.Error()))
 		ctx.JSON(restErr.ErrStatus, restErr)
@@ -57,61 +60,77 @@ func (c *Controller) ShowAllBuku(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, data)
 }
 
-// func (c *Controller) GetBukuById(ctx *gin.Context) {
-// 	bId := ctx.Param("bookId")
-// 	bukuId, err := strconv.Atoi(html.EscapeString(strings.TrimSpace(bId)))
-// 	if err != nil {
-// 		fmt.Println("Error during conversion")
-// 		return
-// 	}
+// Controller menampilkan data detail buku
+func (c *Controller) GetBukuById(ctx *gin.Context) {
+	// ambil param id
+	bId := ctx.Param("bookId")
+	// sanitasi data dari user
+	bukuId, err := strconv.Atoi(html.EscapeString(strings.TrimSpace(bId)))
+	if err != nil {
+		fmt.Println("Error during conversion")
+		return
+	}
+	// proses ke services
+	data, err := c.service.GetBuku(bukuId)
+	if err != nil {
+		// jika datanya error
+		restErr := errors.NewBadRequestError(fmt.Sprintf("gagal mendapatkan data: %v", err.Error()))
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+	ctx.JSON(http.StatusOK, buku_response.SingleDataResponse(data))
 
-// 	data, err := c.service.GetBuku(bukuId)
-// 	if err != nil {
-// 		// jika datanya error
-// 		restErr := errors.NewBadRequestError(fmt.Sprintf("gagal mendapatkan data: %v", err.Error()))
-// 		ctx.JSON(restErr.ErrStatus, restErr)
-// 	} else {
-// 		ctx.JSON(http.StatusOK, data)
-// 	}
+}
 
-// }
+func (c *Controller) UpdateBuku(ctx *gin.Context) {
+	// alokasikan memori
+	// https://dev.to/bhanu011/how-is-new-different-in-go-41lk
+	// https://go.dev/doc/effective_go
+	buku := new(buku_request.BukuRequest)
 
-// func (c *Controller) UpdateBuku(ctx *gin.Context) {
-// 	var buku models.Buku
-// 	bId := ctx.Param("bookId")
-// 	bukuId, err := strconv.Atoi(html.EscapeString(strings.TrimSpace(bId)))
-// 	if err != nil {
-// 		fmt.Println("Error during conversion")
-// 		return
-// 	}
-// 	if err := ctx.ShouldBindJSON(&buku); err != nil {
-// 		restErr := errors.NewBadRequestError("invalid json body")
-// 		ctx.JSON(restErr.ErrStatus, restErr)
-// 		return
-// 	}
-// 	fmt.Println(buku, bukuId)
+	bId := ctx.Param("bookId")
+	// sanitasi data dari user
+	bukuId, err := strconv.Atoi(html.EscapeString(strings.TrimSpace(bId)))
+	if err != nil {
+		fmt.Println("Error during conversion")
+		return
+	}
+	// cek json
+	if err := ctx.ShouldBindJSON(&buku); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+	// proses ke services update buku
+	data, err := c.service.UpdateBuku(bukuId, *buku.CreateUpdateJenisBuku())
+	// cek jika eror
+	if err != nil {
+		restErr := errors.NewBadRequestError(fmt.Sprintf("invalid update data: %v", err.Error()))
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
 
-// 	if err := c.service.UpdateBuku(bukuId, buku); err != nil {
-// 		restErr := errors.NewBadRequestError(fmt.Sprintf("invalid update data: %v", err.Error()))
-// 		ctx.JSON(restErr.ErrStatus, restErr)
-// 		return
-// 	}
+	// tinggal di return aja
+	ctx.JSON(http.StatusCreated, buku_response.SingleDataResponse(&data))
+}
 
-// 	ctx.JSON(http.StatusCreated, "Updated")
-// }
-
-// func (c *Controller) HapusBuku(ctx *gin.Context) {
-// 	bId := ctx.Param("bookId")
-// 	bukuId, err := strconv.Atoi(bId)
-// 	if err != nil {
-// 		fmt.Println("Error during conversion")
-// 		return
-// 	}
-// 	if err := c.service.DeleteBuku(bukuId); err != nil {
-// 		// jika datanya error
-// 		restErr := errors.NewBadRequestError(err.Error())
-// 		ctx.JSON(restErr.ErrStatus, restErr)
-// 		return
-// 	}
-// 	ctx.JSON(http.StatusCreated, "Deleted")
-// }
+func (c *Controller) HapusBuku(ctx *gin.Context) {
+	bId := ctx.Param("bookId")
+	// sanitasi data dari user
+	bukuId, err := strconv.Atoi(html.EscapeString(strings.TrimSpace(bId)))
+	if err != nil {
+		fmt.Println("Error during conversion")
+		return
+	}
+	// proses delete di services
+	if err := c.service.DeleteBuku(bukuId); err != nil {
+		// jika datanya error
+		restErr := errors.NewBadRequestError(err.Error())
+		ctx.JSON(restErr.ErrStatus, restErr)
+		return
+	}
+	// return object any gin.H{}
+	ctx.JSON(http.StatusCreated, gin.H{
+		"message": "Book deleted successfully",
+	})
+}

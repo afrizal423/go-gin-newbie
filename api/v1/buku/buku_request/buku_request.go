@@ -11,7 +11,7 @@ type BukuRequest struct {
 }
 
 // function untuk mengkonversi dari struct request ke models buku
-func (request *BukuRequest) CreateJenisBuku() *models.Buku {
+func (request *BukuRequest) CreateUpdateJenisBuku() *models.Buku {
 	var book models.Buku
 	book.Title = request.Title
 	book.Author = request.Author
