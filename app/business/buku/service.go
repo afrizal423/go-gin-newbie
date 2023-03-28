@@ -1,6 +1,8 @@
 package buku
 
 import (
+	"errors"
+
 	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
 	"github.com/afrizal423/go-gin-newbie/app/models"
 )
@@ -55,9 +57,9 @@ func (b *bukuService) UpdateBuku(id int, data models.Buku) (models.Buku, error) 
 
 // services proses menghapus data buku
 func (b *bukuService) DeleteBuku(id int) error {
-	// if err := b.repository.HitungBukus(id); err != nil {
-	// 	return err
-	// }
+	if b.repository.HitungBukus(id) == 0 {
+		return errors.New("data kosong")
+	}
 	if err := b.repository.DeleteBukus(id); err != nil {
 		return err
 	}

@@ -1,6 +1,8 @@
 package buku
 
 import (
+	"log"
+
 	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
 	"github.com/afrizal423/go-gin-newbie/app/models"
 	"gorm.io/gorm"
@@ -74,28 +76,10 @@ func (bk *BukuRepository) DeleteBukus(id int) error {
 	return nil
 }
 
-// func (bk *BukuRepository) HitungBukus(id int, db *sql.DB) error {
-// 	// kita tutup koneksinya di akhir proses
-// 	//defer configs.PostgresClose(db)
-
-// 	rows, err := db.Query("SELECT COUNT(*) FROM book WHERE id=$1", id)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer rows.Close()
-
-// 	var count int
-
-// 	for rows.Next() {
-// 		if err := rows.Scan(&count); err != nil {
-// 			log.Fatal(err)
-// 		}
-// 	}
-
-// 	fmt.Printf("Number of rows are %d\n", count)
-
-// 	if count == 0 {
-// 		return errors.New("tidak ada data yang dicari")
-// 	}
-// 	return nil
-// }
+func (bk *BukuRepository) HitungBukus(id int) int64 {
+	var count int64
+	if err := bk.db.Model(&models.Buku{}).Where("id = ?", id).Count(&count).Error; err != nil {
+		log.Println(err)
+	}
+	return count
+}

@@ -29,5 +29,6 @@ type IBukuRepository interface {
 	UpdateBukus(id int, data models.Buku) (models.Buku, error)
 	// repository untuk menghapus buku
 	DeleteBukus(id int) error
-	// HitungBukus(id int, db *sql.DB) error
+	// untuk menghitung jumlah buku
+	HitungBukus(id int) int64
 }
