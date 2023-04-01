@@ -5,7 +5,11 @@ import (
 	bukuService "github.com/afrizal423/go-gin-newbie/app/business/buku"
 	bukuRepository "github.com/afrizal423/go-gin-newbie/app/repository/buku"
 	"github.com/afrizal423/go-gin-newbie/configs"
+	"github.com/afrizal423/go-gin-newbie/database"
+	_ "github.com/afrizal423/go-gin-newbie/docs"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var (
@@ -13,7 +17,9 @@ var (
 )
 
 func main() {
-	conn := configs.InitContext()
+	conn := configs.GormPostgresConn()
+	// migrate db
+	database.DbMigrate(conn)
 
 	bukuHandler := bukuController.NewBukuController(bukuService.NewBukuService(
 		bukuRepository.NewBukuRepository(conn)))
@@ -24,5 +30,7 @@ func main() {
 	router.POST("/books", bukuHandler.TambahBuku)
 	router.DELETE("/books/:bookId", bukuHandler.HapusBuku)
 
-	router.Run(":8000")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	router.Run(":8080")
 }

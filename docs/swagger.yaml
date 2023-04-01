@@ -1,0 +1,183 @@
+definitions:
+  buku_request.BukuRequest:
+    properties:
+      author:
+        type: string
+      name_book:
+        type: string
+    type: object
+  buku_response.BukuResponse:
+    properties:
+      author:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name_book:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  buku_response.Deleted:
+    properties:
+      message:
+        type: string
+    type: object
+  buku_response.NotFound:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  errors.RestErr:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all book
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/buku_response.BukuResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.RestErr'
+      summary: Get details
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: Add book details
+      parameters:
+      - description: Add the book
+        in: body
+        name: buku_request.BukuRequest
+        required: true
+        schema:
+          $ref: '#/definitions/buku_request.BukuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/buku_response.BukuResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.RestErr'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add book details
+      tags:
+      - books
+  /books/{bookId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete of book by id
+      parameters:
+      - description: ID of the book
+        in: path
+        name: bookId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/buku_response.Deleted'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/buku_response.NotFound'
+      summary: Delete by id
+      tags:
+      - books
+    get:
+      consumes:
+      - application/json
+      description: Get details of book by id
+      parameters:
+      - description: ID of the book
+        in: path
+        name: bookId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/buku_response.BukuResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.RestErr'
+      summary: Get details by id
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      description: Update of the book by id
+      parameters:
+      - description: ID of the book
+        in: path
+        name: bookId
+        required: true
+        type: integer
+      - description: Update the book
+        in: body
+        name: buku_request.BukuRequest
+        required: true
+        schema:
+          $ref: '#/definitions/buku_request.BukuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/buku_response.BukuResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.RestErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.RestErr'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update of the book by id
+      tags:
+      - books
+swagger: "2.0"

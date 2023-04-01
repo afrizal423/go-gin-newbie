@@ -1,8 +1,10 @@
 package buku
 
 import (
+	"errors"
+
+	"github.com/afrizal423/go-gin-newbie/api/v1/buku/buku_response"
 	"github.com/afrizal423/go-gin-newbie/app/models"
-	"github.com/afrizal423/go-gin-newbie/configs"
 )
 
 type bukuService struct {
@@ -15,49 +17,50 @@ func NewBukuService(repository IBukuRepository) *bukuService {
 	}
 }
 
-func (b *bukuService) CreateBuku(data models.Buku) error {
-	db := configs.PostgresConn()
-	if err := b.repository.CreateBukus(data, db); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (b *bukuService) ShowAllBuku() ([]models.Buku, error) {
-	db := configs.PostgresConn()
-	data, err := b.repository.ShowAllBukus(db)
+// services proses membuat data buku baru
+func (b *bukuService) CreateBuku(data models.Buku) (models.Buku, error) {
+	var dt2 models.Buku
+	data, err := b.repository.CreateBukus(data)
 	if err != nil {
-		return []models.Buku{}, nil
+		return dt2, err
 	}
 	return data, nil
 }
 
+// services proses menampilkan data buku semua
+func (b *bukuService) ShowAllBuku() ([]buku_response.BukuResponse, error) {
+	data, err := b.repository.ShowAllBukus()
+	if err != nil {
+		return []buku_response.BukuResponse{}, nil
+	}
+	return data, nil
+}
+
+// services proses menampilkan data detail buku
 func (b *bukuService) GetBuku(id int) (*models.Buku, error) {
-	db := configs.PostgresConn()
-	bukuById, err := b.repository.GetBukus(id, db)
+	data, err := b.repository.GetBukus(id)
 	if err != nil {
 		return nil, err
 	}
-	return bukuById, nil
+	return data, nil
 }
 
-func (b *bukuService) UpdateBuku(id int, data models.Buku) error {
-	db := configs.PostgresConn()
-	if err := b.repository.HitungBukus(id, db); err != nil {
-		return err
+// services proses mengubah data buku
+func (b *bukuService) UpdateBuku(id int, data models.Buku) (models.Buku, error) {
+	var dt2 models.Buku
+	data, err := b.repository.UpdateBukus(id, data)
+	if err != nil {
+		return dt2, err
 	}
-	if err := b.repository.UpdateBukus(id, data, db); err != nil {
-		return err
-	}
-	return nil
+	return data, nil
 }
 
+// services proses menghapus data buku
 func (b *bukuService) DeleteBuku(id int) error {
-	db := configs.PostgresConn()
-	if err := b.repository.HitungBukus(id, db); err != nil {
-		return err
+	if b.repository.HitungBukus(id) == 0 {
+		return errors.New("data kosong")
 	}
-	if err := b.repository.DeleteBukus(id, db); err != nil {
+	if err := b.repository.DeleteBukus(id); err != nil {
 		return err
 	}
 	return nil

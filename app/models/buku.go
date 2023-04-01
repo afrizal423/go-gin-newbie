@@ -1,8 +1,13 @@
 package models
 
+import "time"
+
+// initial for gorm struct to create database
 type Buku struct {
-	Id     int    `json:"id"`
-	Title  string `json:"title"`
-	Author string `json:"author"`
-	Desc   string `json:"desc"`
+	Id        int       `gorm:"primary_key;" json:"id"`
+	Title     string    `gorm:"size:255;null;" json:"name_book"`
+	Author    string    `gorm:"size:255;null;" json:"author"`
+	Desc      string    `gorm:"size:255;null;" json:"desc"`
+	CreatedAt time.Time `gorm:"autoCreateTime;" json:"created_at"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime;" json:"updated_at"`
 }
