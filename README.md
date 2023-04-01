@@ -3,7 +3,7 @@
 </p>
 
 # Go Gin Newbie
-Projek homework challange sesi 3 Digitalent Scholarship partner by Hacktiv8 materi SQL & API Implementation. Projek ini menggunakan framework [_Gin_](https://gin-gonic.com/), untuk sesi ini menggunakan database sebagai penyimpanan data.
+Projek1  homework materi 2 Go Programming Microservices Digitalent Scholarship partner by Hacktiv8 materi SQL & API Implementation. Projek ini menggunakan framework [_Gin_](https://gin-gonic.com/), untuk sesi ini menggunakan database sebagai penyimpanan data.
 
 # How To Install
 - Download Go terlebih dahulu [disini](https://golang.org/dl/)
@@ -13,4 +13,5 @@ Projek homework challange sesi 3 Digitalent Scholarship partner by Hacktiv8 mate
 - Jalankan perintah ```go run main.go``` untuk menjalankan program
 
 # Dokumentasi
-Via [Postman Documenter](https://documenter.getpostman.com/view/8073012/2s93RMTuck)
+Via [Postman Documenter](https://documenter.getpostman.com/view/8073012/2s93RQUujz)
+Atau memakai swagger, akses dengan url ```localhost:8080/swagger/index.html```
