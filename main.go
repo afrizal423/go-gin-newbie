@@ -27,5 +27,5 @@ func main() {
 	router.POST("/books", bukuHandler.TambahBuku)
 	router.DELETE("/books/:bookId", bukuHandler.HapusBuku)
 
-	router.Run(":8000")
+	router.Run(":8080")
 }
