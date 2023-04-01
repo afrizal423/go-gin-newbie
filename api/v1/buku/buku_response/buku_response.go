@@ -15,6 +15,15 @@ type BukuResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type NotFound struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}
+
+type Deleted struct {
+	Message string `json:"message"`
+}
+
 // function ini untuk menampilkan single data
 func SingleDataResponse(data *models.Buku) BukuResponse {
 	var response BukuResponse

@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// initial for gorm struct to create database
 type Buku struct {
 	Id        int       `gorm:"primary_key;" json:"id"`
 	Title     string    `gorm:"size:255;null;" json:"name_book"`

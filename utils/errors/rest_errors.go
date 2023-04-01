@@ -14,10 +14,10 @@ import (
 }*/
 
 type RestErr struct {
-	ErrMessage string        `json:"message"`
-	ErrStatus  int           `json:"status"`
-	ErrError   string        `json:"error"`
-	ErrCauses  []interface{} `json:"causes"`
+	ErrMessage string `json:"message"`
+	ErrStatus  int    `json:"status"`
+	ErrError   string `json:"error"`
+	//ErrCauses  []interface{} `json:"causes"`
 }
 
 /*func (e restErr) Error() string {
@@ -42,7 +42,7 @@ func NewRestError(message string, status int, err string, causes []interface{}) 
 		ErrMessage: message,
 		ErrStatus:  status,
 		ErrError:   err,
-		ErrCauses:  causes,
+		//ErrCauses:  causes,
 	}
 }
 
@@ -84,8 +84,8 @@ func NewInternalServerError(message string, err error) *RestErr {
 		ErrStatus:  http.StatusInternalServerError,
 		ErrError:   "internal_server_error",
 	}
-	if err != nil {
-		result.ErrCauses = append(result.ErrCauses, err.Error())
-	}
+	// if err != nil {
+	// 	result.ErrCauses = append(result.ErrCauses, err.Error())
+	// }
 	return result
 }
